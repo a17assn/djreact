@@ -1,42 +1,32 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router } from "react-router-dom";	
-import {connect} from "react-redux";	
+import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Home from './containers/Home';
+import Login from './containers/Login';
+import Signup from './containers/Signup';
+import Activate from './containers/Activate';
+import ResetPassword from './containers/ResetPassword';
+import ResetPasswordConfirm from './containers/ResetPasswordConfirm';
 
-import BaseRouter from "./routes";
-import "antd/dist/antd.css";
-import CustomLayout from './container/Layout';
+import { Provider } from 'react-redux';
+import store from './store';
 
-import * as actions from './store/actions/auth';
+import CustomLayout from './hocs/Layout';
 
+const App = () => (
+    <Provider store={store}>
+        <Router>
+            <CustomLayout>
+                <Switch>
+                    <Route exact path='/' component={Home} />
+                    <Route exact path='/login' component={Login} />
+                    <Route exact path='/signup' component={Signup} />
+                    <Route exact path='/reset_password' component={ResetPassword} />
+                    <Route exact path='/password/reset/confirm/:uid/:token' component={ResetPasswordConfirm} />
+                    <Route exact path='/activate/:uid/:token' component={Activate} />
+                </Switch>
+            </CustomLayout>
+        </Router>
+    </Provider>
+);
 
-class App extends Component {
-
-	componentDidMount() {
-		this.props.onTryAutoSignup();
-	}
-
-	render() {
-		return (
-			<div>
-				<Router>
-					<CustomLayout {...this.props}>
-						<BaseRouter />
-					</CustomLayout>
-				</Router>
-			</div>
-		);
-	}
-}
-
-const mapStateToProps = state => {
-	return {
-		isAuthenticated: state.token !== null
-	}
-}
-const mapDispactchToProps = dispatch => {
-	return {
-		onTryAutoSignup: () => dispatch(actions.authCheckState())
-	}
-}
-
-export default connect(mapStateToProps , mapDispactchToProps)(App);
+export default App;

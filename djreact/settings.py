@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-
+from datetime import timedelta
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,38 +25,40 @@ SECRET_KEY = 'f)ve=!gd10fazp09svb0&s70x5&f4x@nb@hchbh*0uq*63hg^@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+]
+
+INSTALLED_APPS += [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'corsheaders',
-    'rest_auth',
     'rest_auth.registration',
+
+    'rest_auth',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
-
-
-    'articles',
-    'accounts',
-
-
+    'corsheaders',
 ]
 
-SITE_ID = 1
+
+INSTALLED_APPS += [
+    'articles',
+    'accounts',
+]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -102,11 +104,11 @@ DATABASES = {
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
+DEFAULT_FROM_EMAIL = 'hassanaq98@gmail.com'
 EMAIL_HOST_USER = 'hassanaq98@gmail.com'
 EMAIL_HOST_PASSWORD = 'H76328326h'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
 
 
 # Password validation
@@ -147,28 +149,30 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'build/static')
+]
 
-
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 SITE_ID = 1
 
 
-
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-     'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
 
-
-
 SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT',),
+    'AUTH_HEADER_TYPES': ('JWT',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
@@ -177,7 +181,11 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USERNAME_REQUIRED = False
 
+DOMAIN = ('localhost:8000')
+SITE_NAME = ('djreact')
+
 DJOSER = {
+
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
@@ -197,3 +205,5 @@ DJOSER = {
 }
 
 AUTH_USER_MODEL = 'accounts.UserAccount'
+
+CORS_ORIGIN_ALLOW_ALL = True
