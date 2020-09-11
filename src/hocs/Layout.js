@@ -10,31 +10,30 @@ import { Layout, Breadcrumb } from "antd";
 const { Content, Footer } = Layout;
 
 const CustomLayout = (props) => {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await props.checkAuthenticated();
+        await props.load_user();
+      } catch (err) {}
+    };
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				await props.checkAuthenticated();
-				await props.load_user();
-			} catch (err) {}
-		};
+    fetchData();
+  }, [props]);
 
-		fetchData();
-	}, [props]);
-
-	return (
-		<Layout className="layout">
-			<Navbar />
-			<Content style={{ padding: "0 50px" }}>
-				<Breadcrumb style={{ margin: "16px 0" }}>
-					<Breadcrumb.Item>Home</Breadcrumb.Item>
-					<Breadcrumb.Item>List</Breadcrumb.Item>
-				</Breadcrumb>
-				<div className="site-layout-content">{props.children}</div>
-			</Content>
-			<Footer style={{ textAlign: "center" }}>Design By Alhassn</Footer>
-		</Layout>
-	);
+  return (
+    <Layout className="layout">
+      <Navbar />
+      <Content style={{ padding: "0 50px" }}>
+        <Breadcrumb style={{ margin: "16px 0" }}>
+          <Breadcrumb.Item>Home</Breadcrumb.Item>
+          <Breadcrumb.Item>List</Breadcrumb.Item>
+        </Breadcrumb>
+        <div className="site-layout-content">{props.children}</div>
+      </Content>
+      <Footer style={{ textAlign: "center" }}>Design By Alhassn</Footer>
+    </Layout>
+  );
 };
 
 export default connect(null, { checkAuthenticated, load_user })(CustomLayout);
