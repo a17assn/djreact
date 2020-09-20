@@ -1,2 +1,2 @@
-# djreact
+# project
 django with react auth
